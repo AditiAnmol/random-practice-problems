@@ -1,9 +1,15 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class HowSum {
 
-    public static List<Integer> howSum(int targetSum, int[] numbers, List<Integer> memoList) {
+    public static List<Integer> howSum(int targetSum, int[] numbers, HashMap<Integer, List<Integer>> memoList) {
+
+        // Implement memoization tp fetch the already calculated targetSums
+        if(memoList.containsKey(targetSum)) {
+            return memoList.get(targetSum);
+        }
 
         // Check for base cases like
         // If target Sum is zero
@@ -17,18 +23,20 @@ public class HowSum {
             int remainder = targetSum - num;
             List<Integer> remainderResult = howSum(remainder, numbers, memoList);
             if(null != remainderResult) {
-                remainderResult.add(num);
-                return remainderResult;
+                List<Integer> tempResult = new ArrayList<>(remainderResult);
+                tempResult.add(num);
+                memoList.put(targetSum, tempResult);
+                return tempResult;
             }
         }
         return null;
     }
 
     public static void main(String[] args) {
-        int[] numbers = {5, 3, 2};
+        int[] numbers = {2, 3, 5};
         int targetSum = 8;
 
-        System.out.println(howSum(targetSum, numbers, new ArrayList<>()));
+        System.out.println(howSum(targetSum, numbers, new HashMap<>()));
     }
 
 }
